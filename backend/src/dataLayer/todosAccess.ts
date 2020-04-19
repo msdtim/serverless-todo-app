@@ -3,14 +3,16 @@ import { DocumentClient } from 'aws-sdk/clients/dynamodb'
 import { TodoItem } from "../models/TodoItem"
 import { createLogger } from '../utils/logger'
 import { TodoUpdate } from '../models/TodoUpdate'
+const AWSXRay = require('aws-xray-sdk')
 
 const logger = createLogger('TodoAccess')
+const XAWS = AWSXRay.captureAWS(AWS)
 
 export class TodoAccess {
 
   constructor(
     private readonly docClient: DocumentClient = createDynamoDBClient(),
-    private readonly s3 = new AWS.S3({
+    private readonly s3 = new XAWS.S3({
         signatureVersion: 'v4'
       }),
     private readonly todosTable = process.env.TODOS_TABLE,
@@ -123,11 +125,11 @@ export class TodoAccess {
 function createDynamoDBClient() {
   if (process.env.IS_OFFLINE) {
     logger.info('Creating a local DynamoDB instance')
-    return new AWS.DynamoDB.DocumentClient({
+    return new XAWS.DynamoDB.DocumentClient({
       region: 'localhost',
       endpoint: 'http://localhost:8000'
     })
   }
 
-  return new AWS.DynamoDB.DocumentClient()
+  return new XAWS.DynamoDB.DocumentClient()
 }
