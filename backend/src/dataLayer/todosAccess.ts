@@ -14,6 +14,7 @@ export class TodoAccess {
         signatureVersion: 'v4'
       }),
     private readonly todosTable = process.env.TODOS_TABLE,
+    private readonly dueDateIndex = process.env.DUE_DATE_INDEX,
     private readonly bucketName = process.env.TODOS_S3_BUCKET,
     private readonly urlExpiration = process.env.SIGNED_URL_EXPIRATION) {
   }
@@ -33,6 +34,7 @@ export class TodoAccess {
 
     const result = await this.docClient.query({
       TableName: this.todosTable,
+      IndexName: this.dueDateIndex,
       KeyConditionExpression: 'userId = :userId',
       ExpressionAttributeValues: {
         ':userId': userId
