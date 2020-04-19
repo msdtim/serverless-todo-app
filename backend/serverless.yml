@@ -6,6 +6,10 @@ plugins:
   - serverless-iam-roles-per-function
 
 provider:
+  tracing:
+    lambda: true
+    apiGateway: true
+
   name: aws
   runtime: nodejs10.x
 
@@ -33,6 +37,12 @@ functions:
           cors: true
           authorizer: Auth
     iamRoleStatements:
+      - Effect: "Allow" # xray permissions (required)
+        Action:
+          - "xray:PutTraceSegments"
+          - "xray:PutTelemetryRecords"
+        Resource:
+          - "*"
       - Effect: Allow
         Action:
           - dynamodb:Query
@@ -52,6 +62,12 @@ functions:
             schema:
               application/json: ${file(models/create-todo-request.json)}
     iamRoleStatements:
+      - Effect: "Allow" # xray permissions (required)
+        Action:
+          - "xray:PutTraceSegments"
+          - "xray:PutTelemetryRecords"
+        Resource:
+          - "*"
       - Effect: Allow
         Action:
           - dynamodb:PutItem
@@ -71,6 +87,12 @@ functions:
             schema:
               application/json: ${file(models/update-todo-request.json)}
     iamRoleStatements:
+      - Effect: "Allow" # xray permissions (required)
+        Action:
+          - "xray:PutTraceSegments"
+          - "xray:PutTelemetryRecords"
+        Resource:
+          - "*"
       - Effect: Allow
         Action:
           - dynamodb:GetItem
@@ -87,6 +109,12 @@ functions:
           cors: true
           authorizer: Auth
     iamRoleStatements:
+      - Effect: "Allow" # xray permissions (required)
+        Action:
+          - "xray:PutTraceSegments"
+          - "xray:PutTelemetryRecords"
+        Resource:
+          - "*"
       - Effect: Allow
         Action:
           - dynamodb:GetItem
@@ -103,6 +131,12 @@ functions:
           cors: true
           authorizer: Auth
     iamRoleStatements:
+      - Effect: "Allow" # xray permissions (required)
+        Action:
+          - "xray:PutTraceSegments"
+          - "xray:PutTelemetryRecords"
+        Resource:
+          - "*"
       - Effect: Allow
         Action:
           - s3:PutObject
